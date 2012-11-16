@@ -1,9 +1,9 @@
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth import logout
-
 from django.utils import simplejson 
+
 from random import randrange
 from Face import Face
 import math
@@ -12,6 +12,7 @@ import urllib, urllib2
 import Image as PilImage 
 from social_auth.models import UserSocialAuth
 from facegraph import Graph
+
 
 def myphotos(request):
     
