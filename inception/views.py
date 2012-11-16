@@ -103,17 +103,22 @@ def moreImages(request):
             facebookFriends = request.session['facebookFriends']
         else:
             facebookFriends = getFacebookFriends(request)
-         
-        if request.session.has_key('nextFriend'):
-            friendIndex = request.session['nextFriend'] +1
-        else:
-            friendIndex = 0
-        request.session['nextFriend'] = friendIndex
         
-        userId = facebookFriends[friendIndex]['id']    
-        nextImages = getFacebookPhotos(userInstance, userId = userId)
-    
+        while len(nextImages) < 20:
+            nextImages = nextImages + getNextFriendImages(userInstance,facebookFriends, request)
+        
     return sendObjectAsJson(nextImages)
+
+def getNextFriendImages(userInstance,facebookFriends, request):
+    if request.session.has_key('nextFriend'):
+        friendIndex = request.session['nextFriend'] +1
+    else:
+        friendIndex = 0
+    request.session['nextFriend'] = friendIndex
+    
+    userId = facebookFriends[friendIndex]['id']    
+    nextImages = getFacebookPhotos(userInstance, userId = userId)
+    return nextImages
         
 def somePrivateMethod(request):
     
