@@ -58,11 +58,25 @@ def LogoutRequest(request):
 #        photo_list = getFacebookPhotos(userInstance)
 #        
 #    return sendObjectAsJson(photo_list)
+
+def getFacebookFriends(request):
+    facebookFriends = []
+    if request.user.is_authenticated():
+        userInstance = UserSocialAuth.objects.filter(user=request.user).get()
+        access_token = userInstance.tokens['access_token']
+        graphObject = Graph(access_token)
+        facebookFriendsData = graphObject['me'].friends(limit=0)
+        facebookFriends = facebookFriendsData.data
+        request.user.friends = facebookFriends
+    
         
-def getFacebookPhotos(userInstance):
+    request.session['facebookFriends'] = facebookFriends
+    return facebookFriends
+        
+def getFacebookPhotos(userInstance, userId = 'me'):
     access_token = userInstance.tokens['access_token']
     graphObject = Graph(access_token)
-    facebookPhotos = graphObject['me'].photos(limit=0)
+    facebookPhotos = graphObject[userId].photos(limit=0)
     
     photoSources = []
     photoTitles = []
@@ -79,7 +93,28 @@ def getFacebookPhotos(userInstance):
 #        photoTitles.append(photo['name'])
 #        photoSources.append(photo['source'])
     return photoSources
+
+def moreImages(request):
+    nextImages = []
+    if request.user.is_authenticated():
+        userInstance = UserSocialAuth.objects.filter(user=request.user).get()
+        
+        if request.session.has_key('facebookFriends'):
+            facebookFriends = request.session['facebookFriends']
+        else:
+            facebookFriends = getFacebookFriends(request)
+         
+        if request.session.has_key('nextFriend'):
+            friendIndex = request.session['nextFriend'] +1
+        else:
+            friendIndex = 0
+        request.session['nextFriend'] = friendIndex
+        
+        userId = facebookFriends[friendIndex]['id']    
+        nextImages = getFacebookPhotos(userInstance, userId = userId)
     
+    return sendObjectAsJson(nextImages)
+        
 def somePrivateMethod(request):
     
     if not request.user.is_authenticated():
@@ -97,7 +132,7 @@ def somePrivateMethod(request):
 
 def sendObjectAsJson(myObjectDict):
     data = simplejson.dumps(myObjectDict, indent=4) 
-    print 'returning: %s' % data
+    #print 'returning: %s' % data
     resp = HttpResponse(data, mimetype='application/json')
     resp['Access-Control-Allow-Headers'] = '*'
     return resp

@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'', include('social_auth.urls')),
     #url(r'^$', 'views.mainPage'),
     
+    url('^moreImages', 'views.moreImages', name='moreImages'),
     url(r'^changeImage', 'views.changeImage', name='changeImage'),
      
     #url(r'^login/$', redirect_to, {'url': '/login/facebook'}),

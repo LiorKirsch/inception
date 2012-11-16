@@ -53,8 +53,8 @@ $(function () {
     });
 
     // Load images via flickr for demonstration purposes:
-    /*$(document).ready(function() {
-	     var url =  'http://localhost:8000/getPhotosJson';
+    $('#moreImages').button().click( function() {
+	     var url =  'http://localhost:8000/moreImages';
 	     $.getJSON(url, null, function (data) {
 	        var photoUrl;
 	        var urlSmall;
@@ -71,5 +71,9 @@ $(function () {
 	                .appendTo(gallery);
 	        });
 	    });
-	});*/    
+	});
+});
+
+$(window).load(function(){
+	$('#moreImageDiv').show();
 });

@@ -46,15 +46,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="/">Bootstrap</a>
+          <a class="brand" href="/">Inception</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
+              <li class="active"><a href="{% url myphotos %}">My Photos</a></li>
               <li><a href="#upload">Upload</a></li>
               <li><a href="#api">API</a></li>
             </ul>
             
             <ul class="nav pull-right">
+            
+     
             {% if username != None %}
     			<li><a >{{username}}, </a></li> 
               	<li><a href="{% url LogoutRequest %}">Logout</a></li>
