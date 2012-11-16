@@ -117,12 +117,16 @@ def getFace(imageUrl):
     f = opener.open(req)
     return simplejson.load(f)
         
-def placeImageWithMashape(origPilImage,origImageUrl,imageHat):
+def placeImageWithMashape(origPilImage,origImageUrl,imageHat, personIndex):
 ##################MASHAPE
     client = Face("1vgorh7zmjvdnjq2xjwqq6xnwm6xa4", "zhyjc7xytpu3rcwjy3akzzqiirb3ev")
     faceData = client.detect(images='http://www.taipeitimes.com/images/2012/11/08/thumbs/P03-121108-1.jpg')
     numberOfObjects = len(faceData.body['photos'][0]['tags'])
-    faceIndex = randrange(numberOfObjects)
+    if (personIndex is not None) and (0 <= personIndex < numberOfObjects):
+        faceIndex = personIndex
+    else:
+        faceIndex = randrange(numberOfObjects)
+
     singleFaceData = faceData.body['photos'][0]['tags'][faceIndex]
     faceWidth = singleFaceData['width']
     faceHeight = singleFaceData['height']
@@ -136,13 +140,17 @@ def placeImageWithMashape(origPilImage,origImageUrl,imageHat):
     faceY = int(math.floor(faceYcord - imageHatResized.size[1]/2.0 - faceHeight/2.0*0.3 ))
     faceY = faceY - faceHeight/2 
     origPilImage.paste(imageHatResized, (faceX, faceY), imageHatResized)
-    return origPilImage
+    return (origPilImage , faceIndex)
 
-def placeImageWithOpenCv(origPilImage,origImageUrl,imageHat):
+def placeImageWithOpenCv(origPilImage,origImageUrl,imageHat, personIndex):
 ################## OPENCV
     faceData = getFace(origImageUrl)
     numberOfObjects = len(faceData['images'][0]['versions'][0]['objects'])
-    faceIndex = randrange(numberOfObjects)
+    if (personIndex is not None) and (0 <= personIndex < numberOfObjects):
+        faceIndex = personIndex
+    else:
+        faceIndex = randrange(numberOfObjects)
+
     singleFaceData = faceData['images'][0]['versions'][0]['objects'][faceIndex]
     faceWidth = int(math.floor(singleFaceData['width'] * origPilImage.size[0]))
     faceHeight = int(math.floor(singleFaceData['height'] * origPilImage.size[1]))
@@ -158,16 +166,16 @@ def placeImageWithOpenCv(origPilImage,origImageUrl,imageHat):
     faceY = faceY - faceHeight/2 
     origPilImage.paste(imageHatResized, (faceX, faceY), imageHatResized)
     
-    return origPilImage
+    return (origPilImage ,faceIndex)
 
-def placeImage(origPilImage,origImageUrl,finalImageHeight):
+def placeImage(origPilImage,origImageUrl,finalImageHeight, personIndex):
     #
     imageHat = PilImage.open('inception/viet_hat_stright.png')
     #imageHat = PilImage.open('inception/farmer.png')
     #imageHat = PilImage.open('inception/viet_hat.png')
 
-    #modifiedImage = placeImageWithMashape(origPilImage,origImageUrl,imageHat)
-    modifiedImage = placeImageWithOpenCv(origPilImage,origImageUrl,imageHat)
+    #(modifiedImage, faceIndex) = placeImageWithMashape(origPilImage,origImageUrl,imageHat, personIndex)
+    (modifiedImage, faceIndex) = placeImageWithOpenCv(origPilImage,origImageUrl,imageHat, personIndex)
     
     if (finalImageHeight is not None):
         ratio = float(finalImageHeight) /float(modifiedImage.size[1])  
@@ -176,9 +184,7 @@ def placeImage(origPilImage,origImageUrl,finalImageHeight):
     else:
         finalImageResized = modifiedImage
      
-    return finalImageResized 
-    
-    return finalImageResized
+    return (finalImageResized, faceIndex) 
 
 def changeImage(request):
     imageUrl = request.GET.get('url')
@@ -186,12 +192,17 @@ def changeImage(request):
         finalImageHeight = int(request.GET.get('height'))
     else:
         finalImageHeight = None
+        
+    if ('index' in request.GET):
+        personIndex = int(request.GET.get('index'))
+    else:
+        personIndex = None
 
     fp = urllib.urlopen(imageUrl)
     imageFile = cStringIO.StringIO(fp.read()) # constructs a StringIO holding the image
     theImage = PilImage.open(imageFile)
     
-    theImage = placeImage(theImage,imageUrl,finalImageHeight)
+    (theImage, faceIndex) = placeImage(theImage,imageUrl,finalImageHeight, personIndex)
     
     response = HttpResponse(mimetype="image/png")
     theImage.save(response, "PNG")

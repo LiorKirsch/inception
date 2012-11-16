@@ -17,8 +17,8 @@
 <div id="gallery" data-toggle="modal-gallery" data-target="#modal-gallery">
 
 	{% for photo in photo_list %}
-	    <a href="http://tube.liorkirsch.webfactional.com/changeImage?url={{ photo.url }}" title="{{ photo.title }}" rel="gallery">
-    		<img src="http://tube.liorkirsch.webfactional.com/changeImage?url={{ photo.url }}&height=150" onerror='this.parentNode.parentNode.removeChild(this.parentNode)' ></img>
+	    <a href="{% url changeImage %}?url={{ photo.url }}" title="{{ photo.title }}" rel="gallery">
+    		<img src="{% url changeImage %}?url={{ photo.url }}&height=150" onerror='this.parentNode.parentNode.removeChild(this.parentNode)' ></img>
   		</a>
 	{% endfor %}
   
