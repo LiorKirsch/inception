@@ -54,7 +54,7 @@ $(function () {
 
     // Load images via flickr for demonstration purposes:
     $('#moreImages').button().click( function() {
-	     var url =  'http://localhost:8000/moreImages';
+	     var url =  MORE_IMAGES_URL;
 	     $.getJSON(url, null, function (data) {
 	        var photoUrl;
 	        var urlSmall;
