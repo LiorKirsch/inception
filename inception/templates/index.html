@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+		
+<div class="hero-unit">
+  <h1>Inception!</h1>
+  <img src="{{ STATIC_URL }}img/banner3.png" />
+  <p>Inception is a web application created at Tel Aviv AngelHack 2012 by Lior Kirsch and Zvika Rap.<br />
+  Our goal is to help fashion designers to promote their designs, by embedding them right inside customers facebook photos.</p>
+</div>
+<!-- Example row of columns -->
+<div class="row marketing">
+  <div class="span4">
+		<a href="{% url socialauth_begin 'facebook' %}?next={% url myphotos %}" >
+			<img src="{{ STATIC_URL }}img/facebook-tweaked.png"> </img>
+		</a>
+	    <h2>Tweaked Photos</h2>
+	    <p>View you and your facebook friends wearing the latest fashion items. </p>
+	    <p><a class="btn" href="{% url socialauth_begin 'facebook' %}">login with facebook</a></p>
+
+  </div>
+  <div class="span4">
+   	<img src="{{ STATIC_URL }}img/upload.png" />
+    <h2>Upload Items</h2>
+    <p><b>Coming soon:</b> <br/>Upload your own designed items. </p>
+    <p><a class="btn" href="#">Coming soon &raquo;</a></p>
+  </div>
+  <div class="span4">
+    <img src="{{ STATIC_URL }}img/api.png" />
+    <h2>Inception API</h2>
+    <p><b>Coming soon:</b> Use the inception API to embed photos with items in your own website. </p>
+    <p><a class="btn" href="#">Coming soon &raquo;</a></p>
+  </div>
+</div>
+
+{% endblock %}
