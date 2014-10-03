@@ -12,7 +12,7 @@ import urllib, urllib2
 import Image as PilImage 
 from social_auth.models import UserSocialAuth
 from facegraph import Graph
-
+from django.conf import settings
 
 def myphotos(request):
     
@@ -24,8 +24,7 @@ def myphotos(request):
     else:
         return HttpResponseRedirect('/login/?next=%s' % request.path)
         
-    photo = photo_list[0]
-    my_data_dictionary = {'photo_list':photo_list,'photo':photo,'username':username}
+    my_data_dictionary = {'photo_list':photo_list,'username':username}
     return render_to_response('myphotos.html',
                           my_data_dictionary,
                           context_instance=RequestContext(request))
@@ -210,7 +209,7 @@ def placeImageWithOpenCv(origPilImage,origImageUrl,imageHat, personIndex):
 
 def placeImage(origPilImage,origImageUrl,finalImageHeight, personIndex):
     #
-    imageHat = PilImage.open('inception/viet_hat_stright.png')
+    imageHat = PilImage.open('%s/viet_hat_stright.png' % settings.HAT_FOLDER)
     #imageHat = PilImage.open('inception/farmer.png')
     #imageHat = PilImage.open('inception/viet_hat.png')
 

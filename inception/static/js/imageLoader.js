@@ -60,7 +60,7 @@ $(function () {
 	        var urlSmall;
 	        var gallery = $('#gallery'),url;
 	        $.each(data, function (index, photo) {
-	   	    	photoUrl = 'http://tube.liorkirsch.webfactional.com/changeImage?url=' + photo.url;
+	   	    	photoUrl = '/changeImage?url=' + photo.url;
 		    	urlSmall = photoUrl + '&height=150';
 	            $('<a rel="gallery"/>')
 	                .append($('<img>').prop('src', urlSmall)

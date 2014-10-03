@@ -16,7 +16,7 @@
 		</a>
 	    <h2>Tweaked Photos</h2>
 	    <p>View you and your facebook friends wearing the latest fashion items. </p>
-	    <p><a class="btn" href="{% url socialauth_begin 'facebook' %}">login with facebook</a></p>
+	    <p><a class="btn" href="{% url socialauth_begin 'facebook' %}?next={% url myphotos %}">login with facebook</a></p>
 
   </div>
   <div class="span4">

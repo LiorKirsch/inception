@@ -1,7 +1,7 @@
 # Django settings for inception project.
 import os
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
-
+HAT_FOLDER = 'inecption'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
